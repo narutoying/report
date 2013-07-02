@@ -1,0 +1,14 @@
+<html>  
+<head>  
+<title>SOA</title>  
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="/css/bootstrap-responsive.css" />
+<link rel="stylesheet" type="text/css" href="/css/bootstrap-responsive.min.css" />
+<script type="text/javascript" src="/js/jquery-1.7.1.min.js"></script>
+</head>  
+<body>  
+<h2>看到这里你就对了</h2>
+<table class="table table-bordered table-striped" style="width:600px;">	
+</table>
+</body>  
+</html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="GBK"?>
+<table sqlname="user">
+
+	<operation name="getById">
+		<sql><![CDATA[
+			select * from user where id=?
+		]]></sql>
+	</operation>
+	
+	<operation name="getAll" multiplicity="many">
+		<sql><![CDATA[
+			select * from user
+		]]></sql>
+	</operation>
+	
+	<!--
+	<operation name="getByCondition" multiplicity="many" paging="true" parameterClass="map">
+		<extraparams>
+			<param name="username" javatype="java.lang.String"/>
+		 </extraparams>
+		<sql><![CDATA[
+			select * from user
+		]]></sql>
+		<sqlmap><![CDATA[
+          select * from user
+			<dynamic prepend="WHERE">
+				<isNotEmpty prepend="and" property="username">
+					${cdata-start}
+						username = #username#
+					${cdata-end}
+				</isNotEmpty>
+			</dynamic>
+			order by id DESC
+			limit #pageNum#, #pageSize#
+		 ]]></sqlmap>
+	</operation>
+	-->
+	
+</table>

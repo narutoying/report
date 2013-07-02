@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="GB2312"?>
+
+<project name="report-dalgen" default="release" basedir=".">
+	<!-- define properties -->
+	<property name="name" value="report-dalgen" />
+	<property environment="env"/>
+	
+	<loadproperties srcFile="db.properties" />
+
+	<!-- properties for directory -->
+	<property name="dir.conf" value="${user.home}/.middlegen/conf" />
+	<property name="dir.lib" value="${user.home}/.middlegen/lib" />
+	<property name="dir.target" value="${basedir}/target" />
+	<property name="dir.deploy" value="${basedir}/../app/common/dal/src/main" />
+
+	<!-- properties for middlegen plugin -->
+	<property name="middlegen.templates" value="templates" />
+	<property name="middlegen.destination" value="${dir.deploy}" />
+	<property name="middlegen.config.file" value="${basedir}/dal-config.xml" />
+	<property name="middlegen.package" value="com.taicang.mscz.report.common.dal" />
+	<property name="middlegen.package.dir" value="com/taicang/mscz/report/common/dal" />
+
+	<!-- insert database configuration here -->
+   	<property name="database.driver.file" value="${dir.lib}/mysql-jdbc-5.0.4.jar" />
+	<property name="database.driver.classpath" value="${database.driver.file}" />
+	<property name="database.driver" value="com.mysql.jdbc.Driver" />
+
+	<!-- classpath -->
+	<path id="classpath.main">
+		<pathelement path="${dir.conf}" />
+		<fileset dir="${dir.lib}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<!-- compile middlegen plugin -->
+	<target name="compile" depends="" description="">
+		<mkdir dir="${dir.lib}" />
+		<mkdir dir="${dir.conf}" />
+		<copy todir="${dir.lib}">
+			<fileset dir="${basedir}/lib">
+				<include name="**/*.jar" />
+				<exclude name="**/*src.jar" />
+				<exclude name="**/*doc.jar" />
+			</fileset>
+		</copy>
+		<unjar src="${dir.lib}/alipay-tools-dalgen-1.1.2.jar" dest="${dir.conf}" />
+		<copy file="${dir.conf}/middlegen-plugin.xml" todir="${dir.conf}/META-INF" />
+	</target>
+
+	<!-- sanity check (database driver must be available) -->
+	<target name="check-driver-present">
+		<available file="${database.driver.file}" type="file" property="driver.present" />
+	</target>
+	<target name="panic-if-driver-not-present" unless="driver.present">
+		<fail>
+        JDBC�����"${database.driver.file}"������        </fail>
+	</target>
+
+	<!-- =================================================================== -->
+	<!-- Run Middlegen                                                       -->
+	<!-- =================================================================== -->
+	<target name="middlegen" depends="compile,check-driver-present,panic-if-driver-not-present" description="">
+
+		<taskdef name="middlegen" classname="middlegen.MiddlegenTask" classpathref="classpath.main" />
+		<echo message="" />
+		<input message="������Ŀ�����,����Զ��ŷָ�,ȫ�����������'*',ֻ���Sequence������'seq': " addproperty="tabs" />
+
+		<echo message="DAL�����ļ���{middlegen.config.file}." />
+		<echo message="��ʼ�Զ����report DAL..." />
+
+		<mkdir dir="${middlegen.destination}" />
+		<middlegen configfile="${middlegen.config.file}" runModel="SOFA" tabs="${tabs}" appname="${name}" databaseurl="${database.url}" driver="${database.driver}" username="${database.userid}" password="${database.password}" schema="${database.schema}" prefsdir="${dir.target}">
+
+			<iwallet destination="" mergedir="${middlegen.templates}/mergedir" package="${middlegen.package}">
+				<!-- �����ݶ���(DataObject)���� -->
+				<!-- <fileproducer destination="${middlegen.destination}/java/${middlegen.package.dir}" template="${middlegen.templates}/base-do.vm" filename="dataobject/BaseDO.java" /> -->
+
+				<!-- Ϊÿһ�ű����һ����ݶ����� -->
+				<fileproducer destination="${middlegen.destination}/java/${middlegen.package.dir}" template="${middlegen.templates}/do.vm" filename="dataobject/{0}DO.java" />
+
+				<!-- Ϊÿһ�ű����һ��DAO�ӿ� -->
+				<fileproducer destination="${middlegen.destination}/java/${middlegen.package.dir}" template="${middlegen.templates}/dao.vm" filename="daointerface/{0}DAO.java" />
+
+				<!-- Ϊÿһ�ű����ibatis DAOʵ�� -->
+				<fileproducer destination="${middlegen.destination}/java/${middlegen.package.dir}" template="${middlegen.templates}/ibatis.vm" filename="ibatis/Ibatis{0}DAO.java" />
+
+				<!-- ��ɷ���sequence���DAO�ӿ� 
+				<fileproducer destination="${middlegen.destination}/java/${middlegen.package.dir}" template="${middlegen.templates}/seq-dao.vm" filename="daointerface/SeqDAO.java" />
+                -->
+				<!-- ���SequenceDAO��Ibatisʵ�� 
+				<fileproducer destination="${middlegen.destination}/java/${middlegen.package.dir}" template="${middlegen.templates}/seq-ibatis.vm" filename="ibatis/IbatisSeqDAO.java" />
+                -->
+				<!-- Ϊÿһ�ű����һ��sqlmapping�ļ� -->
+				<fileproducer destination="${middlegen.destination}/resources" template="${middlegen.templates}/table-sqlmap-mapping.vm" filename="sqlmap/{0}-sqlmap-mapping.xml" />
+
+				<!-- ��ɹ�����sqlmapping�ļ� 
+				<fileproducer destination="${middlegen.destination}/resources" template="${middlegen.templates}/common-sqlmap-mapping.vm" filename="sqlmap/common-sqlmap-mapping.xml" />
+				-->
+
+				<!-- ���ibatis�������ļ�-->
+				<fileproducer destination="${middlegen.destination}/resources" template="${middlegen.templates}/sqlmap.vm" filename="sqlmap/sqlmap.xml" />
+
+				<!-- ���DAO beans��Spring�����ļ� -->
+				<fileproducer destination="${middlegen.destination}/resources/spring" template="${middlegen.templates}/beans-dal-dao.vm" filename="report-common-dal-dao.xml" />
+			</iwallet>
+		</middlegen>
+		<echo message="DAL����ѳɹ�!" />
+	</target>
+
+
+  <target name="check-target-present">
+  	<available file="${dir.target}" type="dir" property="target.present"/>
+  </target>
+	<target name="clean-perf" depends="check-target-present" description="" if="target.present">
+		<delete>
+			<fileset dir="${dir.target}">
+				<include name="*.properties"/>
+			</fileset>
+		</delete>
+  </target>
+
+
+	<target name="clean-middlegen" depends="" description="">
+		<delete dir="${user.home}/.middlegen/lib" />
+		<delete dir="${user.home}/.middlegen/conf" />
+	</target>
+
+	<target name="clean" depends="clean-perf,clean-middlegen" description="clean all generated stuff" />
+
+	<!-- The default target to use -->
+	<target name="release" depends="clean,middlegen" description="" />
+</project>

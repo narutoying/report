@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    
+    <parent>
+        <groupId>com.taicang.mscz</groupId>
+		<artifactId>report-parent</artifactId>
+		<version>1.0</version>
+		<relativePath>../../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.taicang.mscz</groupId>
+	<artifactId>report-web-home</artifactId>
+	<version>1.0</version>
+	<name>tceon report-web-home</name>
+	
+    <packaging>war</packaging>
+	
+  <dependencies>
+    <!-- project depends -->
+	<dependency>
+		<groupId>com.taicang.mscz</groupId>
+		<artifactId>report-biz-shared</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>com.taicang.mscz</groupId>
+		<artifactId>report-biz-service-impl</artifactId>
+	</dependency>	
+
+    <!-- lib depends -->
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-webmvc</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-web</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>velocity</groupId>
+		<artifactId>velocity</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>velocity-tools</groupId>
+		<artifactId>velocity-tools-view</artifactId>
+	</dependency>
+	<dependency>
+	    <groupId>org.apache.directory.studio</groupId>
+	    <artifactId>org.apache.commons.collections</artifactId>
+	</dependency>
+	<!-- servlet -->
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>jsp-api</artifactId>
+		<scope>provided</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>jstl</artifactId>
+		<scope>runtime</scope>
+	</dependency>
+		
+  </dependencies>
+  
+<profiles>  
+  <!-- dev -->
+   <profile> 
+       <id>dev</id>  
+       <activation>  
+         <property>  
+           <name>env</name>  
+           <value>dev</value>  
+         </property>  
+       </activation>  
+       <properties>  
+         <config>src/main/webapp/WEB-INF/config/tceon-config.properties</config>  
+         <resourceConfig>deploy/config/config.dev</resourceConfig>  
+         <log4jConfig>src/main/webapp/WEB-INF/config/tceon-config-log4j.properties</log4jConfig>  
+         <sourceLog4jConfig>deploy/config/log4j.dev</sourceLog4jConfig>  
+       </properties>  
+	   <build>
+	    <plugins>
+		     <plugin>  
+		     <groupId>org.apache.maven.plugins</groupId>
+		     <artifactId>maven-antrun-plugin</artifactId>
+		     <version>1.7</version>
+		     <executions>  
+		       <execution>  
+		         <phase>prepare-package</phase>  
+		         <goals>  
+		           <goal>run</goal>  
+		         </goals>  
+		         <configuration>  
+		           <tasks>  
+		             <delete file="${config}" />  
+		             <delete file="${log4jConfig}" />  
+				     <!-- 应用配置 -->
+		             <copy file="${resourceConfig}" tofile="${config}" />  
+				     <!-- log4j配置 -->
+		             <copy file="${sourceLog4jConfig}" tofile="${log4jConfig}" />  
+		           </tasks>  
+		         </configuration>  
+		       </execution>  
+		     </executions>  
+		   </plugin>  
+	    </plugins>
+	  </build>
+     </profile>
+	 
+	 <!-- test -->
+	 <profile> 
+       <id>test</id>  
+       <activation>  
+         <property>  
+           <name>env</name>  
+           <value>test</value>  
+         </property>  
+       </activation>  
+       <properties>  
+	     <config>src/main/webapp/WEB-INF/config/tceon-config.properties</config>  
+         <resourceConfig>deploy/config/config.test</resourceConfig> 
+         <log4jConfig>src/main/webapp/WEB-INF/config/tceon-config-log4j.properties</log4jConfig>  
+         <sourceLog4jConfig>deploy/config/log4j.test</sourceLog4jConfig>  
+       </properties>  
+	   <build>
+	    <plugins>
+		     <plugin>  
+		     <groupId>org.apache.maven.plugins</groupId>
+		     <artifactId>maven-antrun-plugin</artifactId>
+		     <version>1.7</version>
+		     <executions>  
+		       <execution>  
+		         <phase>prepare-package</phase>  
+		         <goals>  
+		           <goal>run</goal>  
+		         </goals>  
+		         <configuration>  
+		           <tasks>  
+		             <delete file="${config}" />  
+		             <delete file="${log4jConfig}" />  
+				     <!-- 应用配置 -->
+		             <copy file="${resourceConfig}" tofile="${config}" />  
+				     <!-- log4j配置 -->
+		             <copy file="${sourceLog4jConfig}" tofile="${log4jConfig}" />  
+		           </tasks>  
+		         </configuration>  
+		       </execution>  
+		     </executions>  
+		   </plugin>  
+	    </plugins>
+	  </build>
+     </profile>
+	 
+	 <!-- prod -->
+	 <profile> 
+       <id>prod</id>  
+       <activation>  
+         <property>  
+           <name>env</name>  
+           <value>prod</value>  
+         </property>  
+       </activation>  
+       <properties>  
+	     <config>src/main/webapp/WEB-INF/config/tceon-config.properties</config>  
+         <resourceConfig>deploy/config/config.prod</resourceConfig>
+         <log4jConfig>src/main/webapp/WEB-INF/config/tceon-config-log4j.properties</log4jConfig>  
+         <sourceLog4jConfig>deploy/config/log4j.prod</sourceLog4jConfig>  
+       </properties>
+	   <build>
+	    <plugins>
+		     <plugin>  
+		     <groupId>org.apache.maven.plugins</groupId>
+		     <artifactId>maven-antrun-plugin</artifactId>
+		     <version>1.7</version>
+		     <executions>  
+		       <execution>  
+		         <phase>prepare-package</phase>  
+		         <goals>  
+		           <goal>run</goal>  
+		         </goals>  
+		         <configuration>  
+		           <tasks>  
+		             <delete file="${config}" />  
+		             <delete file="${log4jConfig}" />  
+				     <!-- 应用配置 -->
+		             <copy file="${resourceConfig}" tofile="${config}" />  
+				     <!-- log4j配置 -->
+		             <copy file="${sourceLog4jConfig}" tofile="${log4jConfig}" />  
+		           </tasks>  
+		         </configuration>  
+		       </execution>  
+		     </executions>  
+		   </plugin>  
+	    </plugins>
+	  </build>  
+     </profile>
+  </profiles>
+  
+</project>

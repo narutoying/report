@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop   
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   
+        http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd   
+        http://www.springframework.org/schema/tx   
+        http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"
+	default-autowire="byName">
+	
+	<import resource="classpath*:spring/*.xml"/>
+  
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>/WEB-INF/config/tceon-config.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+    <mvc:annotation-driven />  
+	
+	<mvc:resources mapping="/js/**" location="/js/"/>
+	<mvc:resources mapping="/css/**" location="/css/"/>
+	<mvc:resources mapping="/image/**" location="/image/"/>
+	
+    <context:annotation-config />
+    
+    <context:component-scan base-package="com.taicang.mscz.report.web" />  
+    
+    <!-- 异常解析器 -->
+    <bean id="simpleMappingExceptionResolver"
+        class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    </bean>
+    
+    <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+      <property name="resourceLoaderPath" value="WEB-INF/templates/velocity"/>
+      <property name="velocityProperties">
+      <props>
+         <prop key="input.encoding">UTF-8</prop><!-- 指定模板引擎进行模板处理的编码 -->
+         <prop key="output.encoding">UTF-8</prop><!-- 指定输出流的编码 -->
+         <prop key="contentType">text/html;charset=UTF-8</prop><!-- contentType -->
+      </props>
+     </property>
+    </bean>
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="cache" value="false" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".vm" />
+
+		<!-- 如果你需要使用Spring 对 Velocity宏命令的支持, 将这个属性设为true -->
+		<property name="exposeSpringMacroHelpers" value="true" />
+         <property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+  
+</beans>  

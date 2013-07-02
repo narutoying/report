@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="GBK"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd"
+	default-autowire="byName">
+    <!-- ======================================================================== -->
+    <!--  DAO���塣                                                               -->
+    <!-- ======================================================================== -->
+#foreach ($table in $plugin.sortedTables)
+#set ($parent = "baseSqlMapClientDAO")
+#if (${table.isAutoSwitchDataSrc})
+#set ($parent = "autoSwitchDataSrcBaseSqlMapClientDAO")
+#end
+    <bean id="${table.beanName}DAO" class="${table.package}.ibatis.Ibatis${table.baseClassName}DAO" parent="$parent"/>
+#end
+
+</beans>
