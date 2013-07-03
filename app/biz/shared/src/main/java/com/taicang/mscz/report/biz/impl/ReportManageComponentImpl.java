@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -21,8 +22,11 @@ import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.taicang.mscz.report.biz.ReportManageComponent;
 import com.taicang.mscz.report.core.model.Report;
+import com.taicang.mscz.report.core.model.ReportConstant;
 import com.taicang.mscz.report.core.model.ReportDimension;
+import com.taicang.mscz.report.core.model.ReportDimensionValue;
 import com.taicang.mscz.report.core.service.ReportManageService;
+import com.taicang.mscz.report.core.service.exception.CommonException;
 import com.taicang.mscz.report.core.service.util.template.CommonManageTemplate;
 import com.taicang.mscz.report.core.service.util.template.callback.CommonManageCallback;
 import com.taicang.mscz.report.facade.model.CommonResult;
@@ -71,10 +75,10 @@ public class ReportManageComponentImpl implements ReportManageComponent {
 								HSSFSheet hssfSheet = hssfWorkbook
 										.getSheetAt(0);
 								HSSFRow titleRow = hssfSheet.getRow(0);
-								for (int colNum = 0; colNum < titleRow
-										.getLastCellNum(); colNum++) {
-									String value = getValue(titleRow
-											.getCell(colNum));
+								int lastCellNum = titleRow.getLastCellNum();
+								for (int colNum = 0; colNum < lastCellNum; colNum++) {
+									String value = getValue(
+											titleRow.getCell(colNum), 0, colNum);
 									tmpDimNames.add(value);
 									ReportDimension dimension = new ReportDimension();
 									dimension.setName(value);
@@ -89,17 +93,19 @@ public class ReportManageComponentImpl implements ReportManageComponent {
 									if (hssfRow == null) {
 										continue;
 									}
-									for (int colNum = 0; colNum < hssfRow
-											.getLastCellNum(); colNum++) {
-										String value = getValue(hssfRow
-												.getCell(colNum));
+									for (int colNum = 0; colNum < lastCellNum; colNum++) {
+										String value = getValue(
+												hssfRow.getCell(colNum),
+												rowNum, colNum);
 										String dimName = tmpDimNames
-												.get(colNum); // TODO
+												.get(colNum);
 										unitData.put(dimName, value);
 										buildDimValues(tmpDimValues, dimName,
 												value);
 									}
 								}
+								fillDimValues(conditionsWithValues,
+										tmpDimValues);
 								reportManageService.receiveReport(report,
 										conditionsWithValues, unitDatas);
 							} catch (IOException e) {
@@ -122,6 +128,19 @@ public class ReportManageComponentImpl implements ReportManageComponent {
 		return result;
 	}
 
+	private void fillDimValues(List<ReportDimension> conditionsWithValues,
+			Map<String, Set<String>> tmpDimValues) {
+		for (ReportDimension dimension : conditionsWithValues) {
+			String name = dimension.getName();
+			Set<String> set = tmpDimValues.get(name);
+			List<ReportDimensionValue> values = new ArrayList<ReportDimensionValue>();
+			for (String dimValue : set) {
+				values.add(new ReportDimensionValue(dimValue));
+			}
+			dimension.setValues(values);
+		}
+	}
+
 	/**
 	 * 填充维度列值映射表
 	 * 
@@ -131,20 +150,36 @@ public class ReportManageComponentImpl implements ReportManageComponent {
 	 */
 	private void buildDimValues(Map<String, Set<String>> tmpDimValues,
 			String dimName, String value) {
+		if (tmpDimValues.containsKey(dimName)) {
+			tmpDimValues.get(dimName).add(value);
+		} else {
+			Set<String> set = new TreeSet<String>();
+			set.add(value);
+			tmpDimValues.put(dimName, set);
+		}
 	}
 
 	@SuppressWarnings("static-access")
-	private String getValue(HSSFCell hssfCell) {
-		if (hssfCell.getCellType() == hssfCell.CELL_TYPE_BOOLEAN) {
-			// 返回布尔类型的值
-			return String.valueOf(hssfCell.getBooleanCellValue());
-		} else if (hssfCell.getCellType() == hssfCell.CELL_TYPE_NUMERIC) {
-			// 返回数值类型的值
-			return String.valueOf(hssfCell.getNumericCellValue());
-		} else {
-			// 返回字符串类型的值
-			return String.valueOf(hssfCell.getStringCellValue());
+	private String getValue(HSSFCell hssfCell, int rowNum, int colNum) {
+		try {
+			if (hssfCell != null) {
+				hssfCell.setCellType(hssfCell.CELL_TYPE_STRING);
+				return hssfCell.getStringCellValue();
+			} else {
+				return ReportConstant.NULL;
+			}
+		} catch (Exception e) {
+			throw new CommonException(
+					"获取指定列值出错[" + rowNum + "," + colNum + "]", e);
 		}
+		/*
+		 * if (hssfCell.getCellType() == hssfCell.CELL_TYPE_BOOLEAN) { //
+		 * 返回布尔类型的值 return String.valueOf(hssfCell.getBooleanCellValue()); }
+		 * else if (hssfCell.getCellType() == hssfCell.CELL_TYPE_NUMERIC) { //
+		 * 返回数值类型的值 return String.valueOf(hssfCell.getNumericCellValue()); }
+		 * else { // 返回字符串类型的值 return
+		 * String.valueOf(hssfCell.getStringCellValue()); }
+		 */
 	}
 
 	public CommonManageTemplate getCommonManageTemplate() {

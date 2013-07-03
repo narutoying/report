@@ -10,4 +10,7 @@
     <sqlMap resource="sqlmap/ReportDimensionValue-sqlmap-mapping.xml"/>
     <sqlMap resource="sqlmap/ReportFieldMapping-sqlmap-mapping.xml"/>
     <sqlMap resource="sqlmap/Unit-sqlmap-mapping.xml"/>
+
+	<sqlMap resource="sqlmap/UnitExtra-sqlmap-mapping.xml"/>
+
 </sqlMapConfig>

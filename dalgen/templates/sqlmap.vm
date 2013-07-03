@@ -8,4 +8,7 @@
 #foreach ($table in $plugin.sortedTables)            
     <sqlMap resource="sqlmap/${table.baseClassName}-sqlmap-mapping.xml"/>
 #end
+
+	<sqlMap resource="sqlmap/UnitExtra-sqlmap-mapping.xml"/>
+
 </sqlMapConfig>

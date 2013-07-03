@@ -35,6 +35,7 @@
 	<bean id="reportDimensionRepository" class="com.taicang.mscz.report.core.service.repository.impl.ReportDimensionRepositoryImpl" />
 	<bean id="reportFieldMappingRepository" class="com.taicang.mscz.report.core.service.repository.impl.ReportFieldMappingRepositoryImpl" />
 	<bean id="unitRepository" class="com.taicang.mscz.report.core.service.repository.impl.UnitRepositoryImpl" />
+	<bean id="commonManageTemplate" class="com.taicang.mscz.report.core.service.util.template.impl.CommonManageTemplateImpl" />
 	
 </beans>
 

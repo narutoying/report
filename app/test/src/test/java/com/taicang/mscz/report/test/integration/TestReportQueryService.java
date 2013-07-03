@@ -30,12 +30,10 @@ public class TestReportQueryService extends BaseTestCase {
 	@Autowired
 	private ReportQueryService reportQueryService;
 
-	int reportId = 5;
-
 	@Test
 	public void testQueryReportDimensions() {
 		List<ReportDimension> queryReportDimensions = reportQueryService
-				.queryReportDimensions(reportId);
+				.queryReportDimensions(5);
 		System.out.println(ToStringBuilder.reflectionToString(
 				queryReportDimensions, ToStringStyle.SHORT_PREFIX_STYLE));
 	}
@@ -44,10 +42,10 @@ public class TestReportQueryService extends BaseTestCase {
 	public void testQueryReportUnits() {
 		ReportQueryCondition queryCondition = new ReportQueryCondition();
 		Map<String, List<String>> dimensionsValue = new HashMap<String, List<String>>();
-		dimensionsValue.put("机构", Arrays.asList(new String[] { "家乐福" }));
-		// dimensionsValue.put("姓名", Arrays.asList(new String[] { "小李" }));
+		dimensionsValue.put("客户号",
+				Arrays.asList(new String[] { "2000153779", "2000153936" }));
 		queryCondition.setDimensionsValue(dimensionsValue);
-		List<Unit> reportUnits = reportQueryService.queryReportUnits(reportId,
+		List<Unit> reportUnits = reportQueryService.queryReportUnits(11,
 				queryCondition);
 		System.out.println(reportUnits.size());
 	}
