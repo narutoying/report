@@ -5,39 +5,37 @@
 package com.taicang.mscz.report.core.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.taicang.mscz.report.core.model.Report;
-import com.taicang.mscz.report.core.model.ReportFieldMapping;
-import com.taicang.mscz.report.core.model.ReportQueryCondition;
-import com.taicang.mscz.report.core.model.Unit;
+import com.taicang.mscz.report.core.model.ReportDimension;
 
 /**
- * ±¨±í¹ÜÀí·şÎñ
+ * æŠ¥è¡¨ç®¡ç†æœåŠ¡
  * 
  * @author narutoying09@gmail.com
- * @version $Id: ReportService.java, v 0.1 2013-7-2 ÏÂÎç4:54:09
+ * @version $Id: ReportService.java, v 0.1 2013-7-2 ï¿½ï¿½ï¿½ï¿½4:54:09
  *          narutoying09@gmail.com Exp $
  */
 public interface ReportManageService {
 
 	/**
-	 * ½ÓÊÕ²¢³õÊ¼»¯±¨±íÏà¹ØÊı¾İ
-	 * 1. ¼ì²é±¨±íÊÇ·ñÄÜ¹»±»½ÓÊÕ
-	 * 	1.1 Êı¾İÍêÕûĞÔ
-	 * 	1.2 ±¨±íÊÇ·ñÒÑ´æÔÚ£¨±¨±íÃû×ÖÎ¨Ò»£©
-	 * 2. ¼ì²éÍ¨¹ıºó£¬½øĞĞÒÔÏÂ²Ù×÷£º
-	 * 	2.1 ³õÊ¼»¯±¨±í 
-	 *  2.2 ³õÊ¼»¯²éÑ¯Î¬¶È£¨ÓëÖµ£©
-	 *  2.3 ³õÊ¼»¯×Ö¶ÎÓ³Éä¹ØÏµ
-	 *  2.4 ³õÊ¼»¯»ù´¡Êı¾İµ¥Ôª
+	 * æ¥æ”¶å¹¶åˆå§‹åŒ–æŠ¥è¡¨ç›¸å…³æ•°æ®
+	 * 1. æ£€æŸ¥æŠ¥è¡¨æ˜¯å¦èƒ½å¤Ÿè¢«æ¥æ”¶
+	 * 	1.1 æ•°æ®å®Œæ•´æ€§
+	 * 	1.2 æŠ¥è¡¨æ˜¯å¦å·²å­˜åœ¨ï¼ˆæŠ¥è¡¨åå­—å”¯ä¸€ï¼‰
+	 * 2. æ£€æŸ¥é€šè¿‡åï¼Œè¿›è¡Œä»¥ä¸‹æ“ä½œï¼š
+	 * 	2.1 åˆå§‹åŒ–æŠ¥è¡¨ 
+	 *  2.2 åˆå§‹åŒ–æŠ¥è¡¨ç»´åº¦ï¼ˆä¸å€¼ï¼‰
+	 *  2.3 åˆå§‹åŒ–å­—æ®µæ˜ å°„å…³ç³»
+	 *  2.4 åˆå§‹åŒ–åŸºç¡€æ•°æ®å•å…ƒ
 	 * 
-	 * @param report
-	 * @param conditionsWithValues
-	 * @param fieldMapping
-	 * @param units
+	 * @param report æŠ¥è¡¨åŸºæœ¬ä¿¡æ¯
+	 * @param conditionsWithValues ç»´åº¦åˆ—ä¸å€¼
+	 * @param unitDatas å•å…ƒæ•°æ®
 	 */
 	void receiveReport(Report report,
-			List<ReportQueryCondition> conditionsWithValues,
-			ReportFieldMapping fieldMapping, List<Unit> units);
+			List<ReportDimension> conditionsWithValues,
+			List<Map<String/*ç»´åº¦å*/, String/*çœŸå®å€¼*/>> unitDatas);
 
 }

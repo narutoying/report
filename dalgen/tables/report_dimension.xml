@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="GBK"?>
+<table sqlname="report_dimension"  >
+
+	<operation name="getByReportId" multiplicity="many">
+		<sql><![CDATA[
+			select * from report_dimension where report_id = ?
+		]]></sql>
+	</operation>
+	
+	<operation name="insert">
+		<sql><![CDATA[
+			insert into report_dimension(report_id, name) values(?, ?)
+		]]></sql>
+	</operation>
+	
+</table>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="GB2312"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+    <settings cacheModelsEnabled="true" enhancementEnabled="false" lazyLoadingEnabled="false" maxRequests="3000" maxSessions="3000" maxTransactions="3000" useStatementNamespaces="false"/>
+    <!--
+    <sqlMap resource="sqlmap/common-sqlmap-mapping.xml"/>
+	-->
+    <sqlMap resource="sqlmap/Report-sqlmap-mapping.xml"/>
+    <sqlMap resource="sqlmap/ReportDimension-sqlmap-mapping.xml"/>
+    <sqlMap resource="sqlmap/ReportDimensionValue-sqlmap-mapping.xml"/>
+    <sqlMap resource="sqlmap/ReportFieldMapping-sqlmap-mapping.xml"/>
+    <sqlMap resource="sqlmap/Unit-sqlmap-mapping.xml"/>
+</sqlMapConfig>

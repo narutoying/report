@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="GBK"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi.xsd"
+	default-autowire="byName">
+    <!-- ======================================================================== -->
+    <!--  DAO���塣                                                               -->
+    <!-- ======================================================================== -->
+    <bean id="reportDAO" class="com.taicang.mscz.report.common.dal.ibatis.IbatisReportDAO" parent="baseSqlMapClientDAO"/>
+    <bean id="reportDimensionDAO" class="com.taicang.mscz.report.common.dal.ibatis.IbatisReportDimensionDAO" parent="baseSqlMapClientDAO"/>
+    <bean id="reportDimensionValueDAO" class="com.taicang.mscz.report.common.dal.ibatis.IbatisReportDimensionValueDAO" parent="baseSqlMapClientDAO"/>
+    <bean id="reportFieldMappingDAO" class="com.taicang.mscz.report.common.dal.ibatis.IbatisReportFieldMappingDAO" parent="baseSqlMapClientDAO"/>
+    <bean id="unitDAO" class="com.taicang.mscz.report.common.dal.ibatis.IbatisUnitDAO" parent="baseSqlMapClientDAO"/>
+
+</beans>

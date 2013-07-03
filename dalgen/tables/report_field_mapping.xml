@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="GBK"?>
+<table sqlname="report_field_mapping"  >
+
+	<operation name="getByReportId" multiplicity="many">
+		<sql><![CDATA[
+			select * from report_field_mapping where report_id = ?
+		]]></sql>
+	</operation>
+	
+	<operation name="insert">
+		<sql><![CDATA[
+			insert into report_field_mapping(report_id, biz_field, db_field) values(?, ?, ?)
+		]]></sql>
+	</operation>
+	
+</table>

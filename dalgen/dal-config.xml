@@ -22,5 +22,10 @@
     <typemap from="short" to="int"/>
     <appName>report</appName>
     
-    <include table="tables/test.xml" />
+    <include table="tables/report.xml" />
+    <include table="tables/report_dimension.xml" />
+    <include table="tables/report_dimension_value.xml" />
+    <include table="tables/report_field_mapping.xml" />
+    <include table="tables/unit.xml" />
+	
 </tables>

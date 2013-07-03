@@ -6,23 +6,39 @@ package com.taicang.mscz.report.core.service;
 
 import java.util.List;
 
-import com.taicang.mscz.report.core.model.ReportQueryCondition;
+import com.taicang.mscz.report.core.model.Report;
+import com.taicang.mscz.report.core.model.ReportDimension;
+import com.taicang.mscz.report.core.model.Unit;
+import com.taicang.mscz.report.core.model.query.ReportQueryCondition;
 
 /**
- * ±¨±í²éÑ¯·şÎñ
+ * æŠ¥è¡¨æŸ¥è¯¢æœåŠ¡
  * 
  * @author narutoying09@gmail.com
- * @version $Id: ReportQueryService.java, v 0.1 2013-7-2 ÏÂÎç4:55:12
+ * @version $Id: ReportQueryService.java, v 0.1 2013-7-2 ï¿½ï¿½ï¿½ï¿½4:55:12
  *          narutoying09@gmail.com Exp $
  */
 public interface ReportQueryService {
+
+	Report getReport(int reportId);
+
 	/**
-	 * ²éÑ¯Ö¸¶¨±¨±íµÄ²éÑ¯Î¬¶È¡¢Ìõ¼ş
+	 * æŸ¥è¯¢æŠ¥è¡¨ç»´åº¦
 	 * 
-	 * @param reportId ±¨±íid
+	 * @param reportId
+	 *            æŠ¥è¡¨id
 	 * @return
 	 */
-	List<ReportQueryCondition> queryReportQueryConditions(int reportId);
-	
-	
+	List<ReportDimension> queryReportDimensions(int reportId);
+
+	/**
+	 * æŒ‰ç»´åº¦æŸ¥è¯¢æŠ¥è¡¨æ•°æ®
+	 * 
+	 * @param reportId
+	 * @param queryCondition
+	 * @return
+	 */
+	List<Unit> queryReportUnits(int reportId,
+			ReportQueryCondition queryCondition);
+
 }

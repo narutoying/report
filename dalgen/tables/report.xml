@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="GBK"?>
+<table sqlname="report"  >
+
+	<operation name="getByName" multiplicity="one">
+		<sql><![CDATA[
+			select * from report where name = ?
+		]]></sql>
+	</operation>
+	
+	<operation name="getById" multiplicity="one">
+		<sql><![CDATA[
+			select * from report where id = ?
+		]]></sql>
+	</operation>
+	
+	<operation name="insert">
+		<sql><![CDATA[
+			insert into report(name, submitter, create_time, modify_time) values(?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+		]]></sql>
+	</operation>
+	
+</table>
