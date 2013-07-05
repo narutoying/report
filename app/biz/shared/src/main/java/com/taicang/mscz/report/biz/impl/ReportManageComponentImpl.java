@@ -21,6 +21,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.taicang.mscz.report.biz.ReportManageComponent;
+import com.taicang.mscz.report.biz.result.ReportResult;
 import com.taicang.mscz.report.core.model.Report;
 import com.taicang.mscz.report.core.model.ReportConstant;
 import com.taicang.mscz.report.core.model.ReportDimension;
@@ -51,9 +52,9 @@ public class ReportManageComponentImpl implements ReportManageComponent {
 	 *      java.io.InputStream)
 	 */
 	@Override
-	public CommonResult receiveReport(final Report report,
+	public ReportResult receiveReport(final Report report,
 			final InputStream inputStream) {
-		CommonResult result = new CommonResult();
+		final ReportResult result = new ReportResult();
 		try {
 			commonManageTemplate.manageWithTransaction(result,
 					new CommonManageCallback() {
@@ -106,8 +107,12 @@ public class ReportManageComponentImpl implements ReportManageComponent {
 								}
 								fillDimValues(conditionsWithValues,
 										tmpDimValues);
-								reportManageService.receiveReport(report,
-										conditionsWithValues, unitDatas);
+								int reportId = reportManageService
+										.receiveReport(report,
+												conditionsWithValues, unitDatas);
+								result.setReportId(reportId);
+								CommonResult.buildResult(result, true,
+										"接收并处理报表文件成功");
 							} catch (IOException e) {
 								logger.error("", e);
 							}

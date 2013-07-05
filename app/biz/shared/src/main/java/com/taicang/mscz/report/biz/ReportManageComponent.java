@@ -6,8 +6,8 @@ package com.taicang.mscz.report.biz;
 
 import java.io.InputStream;
 
+import com.taicang.mscz.report.biz.result.ReportResult;
 import com.taicang.mscz.report.core.model.Report;
-import com.taicang.mscz.report.facade.model.CommonResult;
 
 /**
  * 
@@ -25,6 +25,6 @@ public interface ReportManageComponent {
 	 *            上传文件输入流
 	 * @return
 	 */
-	CommonResult receiveReport(Report report, InputStream inputStream);
+	ReportResult receiveReport(Report report, InputStream inputStream);
 
 }

@@ -58,4 +58,41 @@
     </selectKey>
 	</insert>
 
+    <!-- mapped statement for IbatisReportDAO.getByCondition -->
+    <select id="MS-REPORT-GET-BY-CONDITION" resultMap="RM-REPORT">
+        select /*MS-REPORT-REPORT-GET-BY-CONDITION*/ * from report
+			<dynamic prepend="WHERE">
+				<isNotEmpty prepend="and" property="submitter">
+					<![CDATA[
+						submitter = #submitter#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="name">
+					<![CDATA[
+						name like concat("%", #name#, "%")
+					]]>
+				</isNotEmpty>
+			</dynamic>
+			order by id DESC
+			limit #pageNum#, #pageSize#
+    </select>
+
+    <!-- mapped statement for IbatisReportDAO.getByCondition, needed by paging -->
+    <select id="MS-REPORT-REPORT-GET-BY-CONDITION-COUNT-FOR-PAGING" resultClass="int">
+        select /*MS-REPORT-REPORT-GET-BY-CONDITION-COUNT-FOR-PAGING*/ count(*) from report
+			<dynamic prepend="WHERE">
+				<isNotEmpty prepend="and" property="submitter">
+					<![CDATA[
+						submitter = #submitter#
+					]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="name">
+					<![CDATA[
+						name like concat("%", #name#, "%")
+					]]>
+				</isNotEmpty>
+			</dynamic>
+			
+    </select>
+
 </sqlMap>

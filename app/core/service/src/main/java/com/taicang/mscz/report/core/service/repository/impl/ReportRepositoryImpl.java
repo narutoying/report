@@ -4,12 +4,17 @@
  */
 package com.taicang.mscz.report.core.service.repository.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 
 import com.taicang.mscz.report.common.dal.daointerface.ReportDAO;
 import com.taicang.mscz.report.common.dal.dataobject.ReportDO;
+import com.taicang.mscz.report.common.util.PageList;
 import com.taicang.mscz.report.core.model.Report;
 import com.taicang.mscz.report.core.service.repository.ReportRepository;
+import com.taicang.mscz.report.dal.util.PageUtil;
 
 /**
  * 
@@ -66,6 +71,29 @@ public class ReportRepositoryImpl implements ReportRepository {
 	@Override
 	public Report getReport(int reportId) {
 		return convertToDomain(reportDAO.getById(reportId));
+	}
+
+	@Override
+	public PageList<Report> getReportPageList(String name, String submitter,
+			Integer pageNum, Integer pageSize) {
+		PageList<Report> result = new PageList<Report>();
+		com.taicang.mscz.report.dal.util.PageList pageList = reportDAO
+				.getByCondition(submitter, name, pageSize,
+						PageUtil.getOffset(pageSize, pageNum));
+		result.setPaginator(pageList.getPaginator());
+		result.setDataList(convertToData(pageList));
+		return result;
+	}
+
+	private List<Report> convertToData(
+			com.taicang.mscz.report.dal.util.PageList pageList) {
+		List<Report> result = new ArrayList<Report>();
+		for (Object o : pageList) {
+			if (o instanceof ReportDO) {
+				result.add(convertToDomain((ReportDO) o));
+			}
+		}
+		return result;
 	}
 
 }

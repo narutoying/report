@@ -1,0 +1,22 @@
+#set($masterId = "reportManage")
+<h2>新增报表</h2>
+<form method="POST" action="$!{contextPath}/report/doAddReport.htm" enctype="multipart/form-data">
+	<table>
+		<tr>
+            <th>报表名</th>
+			<td><input type="text" name="name" /></td>
+		</tr>
+		<tr>
+            <th>提交人</th>
+			<td><input type="text" name="submitter" /></td>
+		</tr>
+		<tr>
+            <th>报表excel文件</th>
+			<td><input type="file" name="file" style="width:150px"/></td>
+		</tr>
+		<tr>
+            <th>操作</th>
+            <td><button class="btn btn-success" type="submit">提交</button></td>
+		</tr>
+	</table>
+</form>

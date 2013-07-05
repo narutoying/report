@@ -46,21 +46,30 @@
       <property name="resourceLoaderPath" value="WEB-INF/templates/velocity"/>
       <property name="velocityProperties">
       <props>
+      	<prop key="velocimacro.library">macro.vm</prop>
          <prop key="input.encoding">UTF-8</prop><!-- 指定模板引擎进行模板处理的编码 -->
          <prop key="output.encoding">UTF-8</prop><!-- 指定输出流的编码 -->
          <prop key="contentType">text/html;charset=UTF-8</prop><!-- contentType -->
       </props>
      </property>
     </bean>
+	
+	<!-- 支持上传文件 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    	<property name="maxUploadSize" value="100000000"/> <!-- 100MB -->
+	</bean>
+	
 	<bean id="viewResolver"
-		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
-		<property name="cache" value="false" />
-		<property name="prefix" value="" />
-		<property name="suffix" value=".vm" />
-
-		<!-- 如果你需要使用Spring 对 Velocity宏命令的支持, 将这个属性设为true -->
-		<property name="exposeSpringMacroHelpers" value="true" />
-         <property name="contentType" value="text/html;charset=UTF-8" />
+		class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+			<property name="layoutUrl" value="layout/default.vm" />  
+			<property name="cache" value="false" />
+			<property name="prefix" value="" />
+			<property name="suffix" value="" />
+			<!-- 如果你需要使用Spring 对 Velocity宏命令的支持, 将这个属性设为true -->
+			<property name="exposeSpringMacroHelpers" value="true" />
+	         <property name="contentType" value="text/html;charset=UTF-8" />
+			 <!-- velocity toolbox -->  
+    		<property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml"/>  
 	</bean>
   
 </beans>  

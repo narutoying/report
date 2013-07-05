@@ -6,9 +6,11 @@ package com.taicang.mscz.report.core.service;
 
 import java.util.List;
 
+import com.taicang.mscz.report.common.util.PageList;
 import com.taicang.mscz.report.core.model.Report;
 import com.taicang.mscz.report.core.model.ReportDimension;
 import com.taicang.mscz.report.core.model.Unit;
+import com.taicang.mscz.report.core.model.query.ReportListQueryCondition;
 import com.taicang.mscz.report.core.model.query.ReportQueryCondition;
 
 /**
@@ -20,7 +22,10 @@ import com.taicang.mscz.report.core.model.query.ReportQueryCondition;
  */
 public interface ReportQueryService {
 
-	Report getReport(int reportId);
+	Report queryReport(int reportId);
+
+	PageList<Report> queryReportsByCondition(
+			ReportListQueryCondition queryCondition);
 
 	/**
 	 * 查询报表维度

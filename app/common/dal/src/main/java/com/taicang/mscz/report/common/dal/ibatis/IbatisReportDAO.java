@@ -4,13 +4,16 @@
  */
 package com.taicang.mscz.report.common.dal.ibatis;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.dao.DataAccessException;
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 import com.taicang.mscz.report.common.dal.daointerface.ReportDAO;
-
-// auto generated imports
 import com.taicang.mscz.report.common.dal.dataobject.ReportDO;
-import org.springframework.dao.DataAccessException;
+import com.taicang.mscz.report.dal.util.PageList;
+import com.taicang.mscz.report.dal.util.Paginator;
 
 /**
  * An ibatis based implementation of dao interface <tt>com.taicang.mscz.report.common.dal.daointerface.ReportDAO</tt>.
@@ -90,6 +93,49 @@ public class IbatisReportDAO extends SqlMapClientDaoSupport implements ReportDAO
         getSqlMapClientTemplate().insert("MS-REPORT-INSERT", report);
 
         return report.getId();
+    }
+
+	/**
+	 *  Query DB table <tt>report</tt> for records.
+	 *
+   	 *  <p>
+   	 *  Description for this operation is<br>
+   	 *  <tt></tt>
+	 *  <p>
+	 *  The sql statement for this operation is <br>
+	 *  <tt>select * from report</tt>
+	 *
+	 *	@param submitter
+	 *	@param name
+	 *	@param pageSize
+	 *	@param pageNum
+	 *	@return PageList
+	 *	@throws DataAccessException
+	 */	 
+    public PageList getByCondition(String submitter, String name, int pageSize, int pageNum) throws DataAccessException {
+        Map param = new HashMap();
+
+        param.put("submitter", submitter);
+        param.put("name", name);
+        param.put("pageSize", new Integer(pageSize));
+        param.put("pageNum", new Integer(pageNum));
+
+        Paginator paginator = new Paginator();
+        paginator.setItemsPerPage(pageSize);
+        paginator.setPage(pageNum / pageSize + 1);
+
+        paginator.setItems(((Integer) getSqlMapClientTemplate().queryForObject("MS-REPORT-REPORT-GET-BY-CONDITION-COUNT-FOR-PAGING", param)).intValue());
+        
+        PageList  pageList = new PageList();
+        pageList.setPaginator(paginator);
+        
+        if (paginator.getBeginIndex() <= paginator.getItems()) {
+            param.put("startRow", new Integer(paginator.getBeginIndex()));
+            param.put("endRow", new Integer(paginator.getEndIndex()));
+            pageList.addAll(getSqlMapClientTemplate().queryForList("MS-REPORT-GET-BY-CONDITION", param));
+        }
+        
+        return pageList;
     }
 
 }

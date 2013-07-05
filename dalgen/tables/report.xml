@@ -19,4 +19,31 @@
 		]]></sql>
 	</operation>
 	
+	<operation name="getByCondition" multiplicity="many" paging="true">
+		<extraparams>
+			<param name="submitter" javatype="java.lang.String"/>
+			<param name="name" javatype="java.lang.String"/>
+		 </extraparams>
+		<sql><![CDATA[
+			select * from report
+		]]></sql>
+		<sqlmap><![CDATA[
+          select * from report
+			<dynamic prepend="WHERE">
+				<isNotEmpty prepend="and" property="submitter">
+					${cdata-start}
+						submitter = #submitter#
+					${cdata-end}
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="name">
+					${cdata-start}
+						name like concat("%", #name#, "%")
+					${cdata-end}
+				</isNotEmpty>
+			</dynamic>
+			order by id DESC
+			limit #pageNum#, #pageSize#
+		 ]]></sqlmap>
+	</operation>
+	
 </table>

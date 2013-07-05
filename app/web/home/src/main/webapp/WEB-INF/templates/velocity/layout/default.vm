@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>统一报表平台</title>
+		<meta HTTP-EQUIV="pragma" CONTENT="no-cache"/> 
+        <meta http-equiv="content-type" content="text/html; charset=gbk" />
+        <meta http-equiv="X-UA-Compatible" content="IE=8" />
+        
+        <link rel="icon" href="$!contextPath/images/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="$!contextPath/css/base.css" />
+        <link rel="stylesheet" href="$!contextPath/css/default.css" />
+        <link rel="stylesheet" href="$!contextPath/css/jquery.css"/>
+		<link rel="stylesheet" href="$!contextPath/css/myaccount.css" />
+        <link rel="stylesheet" href="$!contextPath/css/jquery.autocomplete.css"/>
+        <link rel="stylesheet" href="$!contextPath/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+        <link rel="stylesheet" href="$!contextPath/css/bootstrap-responsive.min.css" type="text/css">
+        <link rel="stylesheet" href="$!contextPath/css/bootstrap.min.css" type="text/css">
+        <script type="text/javascript" src="$!contextPath/js/jquery-1.6.1.min.js"></script>
+        <script type="text/javascript" src="$!contextPath/js/jquery.cookie.js"></script>
+        <script type="text/javascript" src="$!contextPath/js/jquery.autocomplete.js"></script>
+        <script type="text/javascript" src="$!contextPath/js/default.js"></script>
+	</head>
+	
+	<body>
+		<div id="container">
+			##$tile.setTemplate("home:headerTile.vm")
+			<div id="header" class="fn-clear">
+            	<h1 class="fn-left" style="font-family:'微软雅黑'">统一报表平台</h1>
+            	<ul class="fn-right">
+            	</ul>
+            </div>
+			##$tile.setTemplate("home:adminMenuTile.vm").setParameter("menuId",$menuId).setParameter("masterId", $masterId)
+			<div id="nav">
+            	<ul id="menu" class="fn-clear fc_ul">
+            		<li class="fn-left  #if($!masterId == "reportManage")current_li #end">
+            			<a href="$!contextPath/report/showReportList.htm">报表管理</a>
+            		</li>
+            	</ul>
+            </div>
+			<div id="content" style="margin-top:50px">
+				<div id="main">
+					$screen_content
+				</div>
+			</div>
+			<div style="clear:both;"></div>
+			##$tile.setTemplate("home:footerTile.vm")
+			<footer id="footer">
+            	<span class="smalipay">design&develop by 戴诚 narutoying09@gmail.com </span>
+            </footer>
+        </div>
+	</body>
+</html>
+

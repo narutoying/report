@@ -1,0 +1,87 @@
+<script>
+	function showSenior(obj){
+		$(".senior").show();
+		$(obj).html("隐藏维度列");
+		$(obj).attr("onclick", "hideSenior(this)");
+	}
+	
+	function hideSenior(obj){
+		$(".senior").hide();
+		$(obj).html("开启维度列");
+		$(obj).attr("onclick", "showSenior(this)");
+	}
+	
+</script>
+#set($masterId = "reportManage")
+<h2>报表：$!{report.name}</h2>
+<div>
+	#*
+	<table>
+		<tr>
+            <th>提交人</th>
+			<td>$!{report.submitter}</td>
+		</tr>
+	</table>
+	*#
+</div>
+<a href="javascript:void(0);" onclick="hideSenior(this)">隐藏维度列</a>
+<div id="dimDiv" class="senior">
+	<form action="$!contextPath/report/showOneReport.htm" method="POST">
+	<button type="submit" value="查询" class="btn btn-success">查询</button>
+	<input type="hidden" name="reportId" value="$!{report.id}" />
+	<table style="width:100%">
+		<tr>
+            <th width="10%">维度名</th>
+            <th>维度值</th>
+		</tr>
+	#if($reportDims && $reportDims.size() > 0)
+		#foreach($reportDim in $reportDims)
+		<tr>
+            <td>$!reportDim.name</td>
+            <td>
+				#set($dimValues = $reportDim.values)
+				#if($dimValues && $dimValues.size() > 0)
+					#foreach($dimValue in $dimValues)
+						#set($pair = "$!reportDim.name^$!dimValue.value")
+						<input name="dimAndValuePairs" type="checkbox" value="$!pair" #if($selectedDimValuesMap.get($!pair) == "true")checked#end />
+						#if($!dimValue.value != "REPORT_NULL")
+							$!dimValue.value
+						#else
+							空	
+						#end
+						&nbsp;&nbsp;
+					#end
+				#end
+			</td>
+		</tr>
+		#end
+	#end
+	</table>
+    <button type="submit" value="查询" class="btn btn-success">查询</button>
+	</form>
+</div>
+<div>
+    <h2>查询结果</h2>
+	<table style="width:100%">
+		<tr>
+            #if($reportDims && $reportDims.size() > 0)
+        		#foreach($reportDim in $reportDims)
+        			<th>$!reportDim.name</th>
+        		#end
+			#end
+		</tr>
+		#if($reportContent && $reportContent.size() > 0)
+		#foreach($oneLine in $reportContent)
+    		<tr>
+				#foreach($oneCol in $oneLine)
+            	<td>
+					#if($!oneCol != "REPORT_NULL")
+					$!oneCol
+					#end
+				</td>
+				#end
+    		</tr>
+		#end
+		#end
+	</table>
+</div>

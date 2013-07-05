@@ -6,10 +6,12 @@ package com.taicang.mscz.report.core.service.impl;
 
 import java.util.List;
 
+import com.taicang.mscz.report.common.util.PageList;
 import com.taicang.mscz.report.core.model.Report;
 import com.taicang.mscz.report.core.model.ReportDimension;
 import com.taicang.mscz.report.core.model.ReportFieldMapping;
 import com.taicang.mscz.report.core.model.Unit;
+import com.taicang.mscz.report.core.model.query.ReportListQueryCondition;
 import com.taicang.mscz.report.core.model.query.ReportQueryCondition;
 import com.taicang.mscz.report.core.service.ReportQueryService;
 import com.taicang.mscz.report.core.service.repository.ReportDimensionRepository;
@@ -78,7 +80,7 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 	}
 
 	@Override
-	public Report getReport(int reportId) {
+	public Report queryReport(int reportId) {
 		return reportRepository.getReport(reportId);
 	}
 
@@ -88,6 +90,14 @@ public class ReportQueryServiceImpl implements ReportQueryService {
 
 	public void setReportRepository(ReportRepository reportRepository) {
 		this.reportRepository = reportRepository;
+	}
+
+	@Override
+	public PageList<Report> queryReportsByCondition(
+			ReportListQueryCondition queryCondition) {
+		return reportRepository.getReportPageList(
+				queryCondition.getReportName(), queryCondition.getSubmitter(),
+				queryCondition.getCurrentPage(), queryCondition.getPageSize());
 	}
 
 }

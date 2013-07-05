@@ -4,6 +4,7 @@
  */
 package com.taicang.mscz.report.core.model.query;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import java.util.Map;
  *          narutoying09@gmail.com Exp $
  */
 public class ReportQueryCondition {
-	private Map<String/* 维度名 */, List<String>/* 维度值列表 */> dimensionsValue;
+	private Map<String/* 维度名 */, List<String>/* 维度值列表 */> dimensionsValue = new HashMap<String, List<String>>();
 
 	public Map<String, List<String>> getDimensionsValue() {
 		return dimensionsValue;

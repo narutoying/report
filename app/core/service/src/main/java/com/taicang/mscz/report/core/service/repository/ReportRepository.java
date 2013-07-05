@@ -4,6 +4,7 @@
  */
 package com.taicang.mscz.report.core.service.repository;
 
+import com.taicang.mscz.report.common.util.PageList;
 import com.taicang.mscz.report.core.model.Report;
 
 /**
@@ -24,4 +25,7 @@ public interface ReportRepository {
 	 * @return 报表在db中的id
 	 */
 	int createReport(Report report);
+
+	PageList<Report> getReportPageList(String name, String submitter,
+			Integer pageNum, Integer pageSize);
 }

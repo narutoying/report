@@ -1,0 +1,71 @@
+#set($reportList = $pageList.dataList)
+#set($paginator = $pageList.paginator)
+#set($masterId = "reportManage")
+<a class="btn btn-success" style="color:white" href="$!contextPath/report/addReport.htm">新增报表</a>
+<div class="normal">
+	<form id="reportListForm" method="get" action="$!contextPath/report/showReportList.htm">
+	#if($!paginator.page > 0)
+	<input type="hidden" name="currentPage" value="$!paginator.page">
+    #else
+    	<input type="hidden" name="currentPage" value="1">
+	#end
+	#*
+    <table class="table table-bordered normalTable">
+    	<tr>
+            <th>需求id</th>
+            <td>
+    			<input type="text" class="ui-input" name="requireId" value="$!condition.requireId"/>
+    		</td>
+            <th>来源应用</th>
+            <td>
+    			<input type="text" class="ui-input" name="sourceApp" value="$!condition.sourceApp" />
+    		</td>
+    	</tr>
+    	<tr>
+            <th>需求状态</th>
+            <td colspan="3">
+    			#select("status" $!commonRequirementStatusMap $!{condition.status} "" "")
+    		</td>
+    	</tr>
+    	<tr>
+    		<td colspan="4">
+            		 <input class="btn btn-primary" type="submit" value="查询">
+            </td>
+    	</tr>
+    </table>
+	*#
+	</form>
+</div>
+<div style="padding-left:20px;">
+	 <table class="table table-bordered normalTable" style="width:600px">
+    	<tr>
+            <th width="10%">报表id</th>
+            <th width="30%">报表名</th>
+            <th width="30%">创建时间</th>
+            <th width="30%">操作</th>
+    	</tr>
+		#if($reportList && $reportList.size() > 0)
+			#foreach($reportItem in $$reportList)
+				#if($reportItem)
+				<tr>
+					<td>
+						$reportItem.id
+					</td>
+					<td>
+						$reportItem.name
+					</td>
+					<td>
+						$!reportItem.createTime
+					</td>
+					<td>
+						<button class="btn" type="button" value="查看" class="btn" onclick="window.location.href='$!contextPath/report/showOneReport.htm?reportId=$reportItem.id'">
+							查看
+                        </button>
+					</td>
+				</tr>
+				#end
+			#end
+		#end
+    </table>
+	#pagingBar($paginator "reportListForm") 
+</div>

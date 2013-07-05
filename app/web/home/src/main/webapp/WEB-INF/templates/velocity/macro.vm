@@ -1,0 +1,277 @@
+##将输入有误的表单字段高亮，支持自定义的高亮style，默认是fm-error
+#macro( highLightField $selfStyle)
+    #if($stringUtil.isBlank($selfStyle))
+    	#set ($style = "fm-error")
+    #else
+        #set ($style = $selfStyle)
+    #end
+    
+    #if($!status.isError()) $style #end
+#end
+
+##显示表单字段的错误提示，支持默认提示
+#macro( showFieldErrorMessage $defaultMsg)
+    #if($!status.isError())
+        <div class="fm-explain">#getErrorMessage()</div>
+    #elseif($stringUtil.isNotBlank($defaultMsg))
+        <div class="fm-explain">#springMessage("$defaultMsg")</div>
+    #end
+#end
+
+#macro( showFormErrorMessage)
+    #if($!status.isError())		
+		<span class="m-error">#getErrorMessage()</span>
+	#end
+#end
+
+##show error messages of properties in the form
+#macro ( showErrorMsgsBR $path $classOrStyle)
+	#if("$!springHtmlEscape" != "")
+        #set( $status = $springMacroRequestContext.getBindStatus($path, $springHtmlEscape) )
+    #else
+        #set( $status = $springMacroRequestContext.getBindStatus($path) )
+    #end
+    #foreach($error in $status.errorMessages)
+        #if($classOrStyle == "")
+            <b>${error}</b>
+        #else
+            #if($classOrStyle.indexOf(":") == -1)
+                #set($attr="class")
+            #else
+                #set($attr="style")
+            #end
+            <span ${attr}="${classOrStyle}">${error}</span>
+        #end
+        <br/>
+    #end
+#end
+
+##获得错误信息
+#macro( getErrorMessage )
+	#set($messages = $status.errorMessages)
+	#if($arrayUtil.getLength($messages) > 0)
+		$array.get($messages, 0)
+	#end
+#end
+
+##添加form token
+#macro ( addFormToken $form)
+	<input type="hidden" name="$form.getTokenFieldName()" value="$form.getToken()"/>
+#end
+
+##添加隐藏字段
+#macro ( addHiddenField $form $id $name $value)
+	<input type="hidden" id="$id" name="$name" value="$form.setField("$name", $stringUtil.defaultIfNull("$!value"))"/>
+#end
+
+##添加隐藏字段（对value值进行escapeHtml）
+#macro ( addHiddenFieldEscapeHtml $form $name $value)
+	<input type="hidden" name="$name" value="$stringEscapeUtil.escapeHtml($form.setField("$name", $stringUtil.defaultIfNull("$!value")))"/>
+#end
+	
+##隐藏卡通ID前面的数字
+#macro( maskCartoonId $cartoonId)**$stringUtil.right($cartoonId, 4)#end
+
+#macro( maskRight $source $length $placeHolder)$placeHolder$stringUtil.right($source, $length)#end
+
+#macro( maskLeft $source $length $placeHolder)$stringUtil.left($source, $length)$placeHolder#end
+
+#macro( convertMoney $amount)$moneyTool.long2String($amount)#end
+
+#macro( getTotalAmount $currentAmount $chargeInfos)$amountCaculateTool.getTotalAmount($currentAmount,$chargeInfos)#end
+
+#macro( getIcon $cashierChannelType $instId)$instId$cashierChannelTypeTool.getShortFormat($cashierChannelType)#end
+
+##获取收银台渠道的加密后的token值。
+#macro( getChannelToken $cashierChannel)$cashierChannelTokenTool.generateChannelToken($cashierChannel)#end
+
+##将收银台渠道类型枚举翻译为js（触发默认显示tab的js）接受的string。
+#macro( getPayMethodStr $cashierChannelType)$payMethodTool.getPayMethodStr($cashierChannelType)#end
+
+##判断浮层中银行（卡通和网银）是否全部包含在支付行为的recordList中。
+#macro( hasMoreBankCards $recordList $cartoonList $ebankList)$bankCardSizeCheckTool.hasMoreBankCards($recordList,$cartoonList,$ebankList)#end
+
+##裁剪邮箱。
+#macro( trimEmail $email)$emailAndNameTrimTool.trimEmail($email)#end
+
+##裁剪Money。
+#macro( trimMoney $money)$stringUtil.trim($money.toString())#end
+	
+##日期格式化
+#macro(VMDateFormat $date $format)
+	#if($date)
+		$!dateUtil.format($date, $format)
+	#end
+#end
+
+## 获取任务类型
+#macro(getTaskType $taskType)
+	#if($taskType == 'BUILD')编译打包
+	#elseif($taskType == 'DEPLOY')部署
+	#elseif($taskType == 'KILL')关闭服务器
+	#elseif($taskType == 'RESTART')重启
+	#elseif($taskType == 'INITSERVER')初始化服务器
+	#elseif($taskType == 'CREATE_APP')创建应用
+	#elseif($taskType == 'CREATE_VM')创建虚拟机
+	#elseif($taskType == 'REMOVE_VM')回收虚拟机
+	#elseif($taskType == 'REMOVE_APP')下线应用
+	#elseif($taskType == 'SYNC_PACKAGE')同步包
+	#end
+#end
+
+## 根据枚举code值获取其message值
+#macro(jdkEnumDescByCode $clazz $code)
+  $!jdkEnumUtil.getByName($clazz, $code).getDesc()
+#end
+
+## 获取任务状态
+#macro(getTaskStatus $taskStatus)
+	#if($taskStatus == 'CREATE')
+		任务创建
+	#elseif($taskStatus == 'EXECUTING')
+		<img style="width:20px;" src="/images/loading.gif" title="任务正在执行" />
+	#elseif($taskStatus == 'SUCCESS')
+		<img src="/images/green-icon.gif" title="任务已成功" />
+	#elseif($taskStatus == 'FAIL')
+		<img src="/images/red.gif" title="任务已失败" />
+	#end
+#end
+
+## 获取服务器状态
+#macro(translateServerStatus $status)
+	#if($status == 'SUBMITTED')已交付
+	#elseif($status == 'INIT')已初始化
+	#elseif($status == 'BOOTING')启动中
+	#elseif($status == 'RUNNING')运行中
+	#elseif($status == 'SHUTTING')关闭中
+	#elseif($status == 'STOPPED')已停止
+	#end
+#end
+
+## 是否选择，应用在select标签
+#macro(isSelected $q1 $q2)
+	#if($q1 == $q2) selected #end
+#end
+
+##生成checkbox
+#macro( checkbox $name $map $checkList)
+	
+#set ($_map = $map)
+#set ($_checkList = $checkList)
+    #foreach($_key in $_map.keySet())		
+		<input class="checkbox" type="checkbox" name="$name" value="$_key" id="$_key" #if($_checkList && $_checkList.contains($_key)) checked #end> $_map.get($_key)&nbsp;
+    #end	
+#end
+
+#** -------------------------------------------
+ * 显示select box
+ * -------------------------------------------- *#
+#macro (select $name $map $selected $hint $event)
+
+#set ($_map = $map)
+#set ($_selected = $selected)
+<select id="$name" name="$name" #if($event!="") onchange="$event" #end class="input_select $name">
+#if ($hint != "")
+  <option value="">$hint</option>
+#end
+
+#foreach ($_key in $_map.keySet())
+  <option value="$_key" #if ($_selected && $_key == $_selected) selected #end>$_map.get($_key)</option>
+#end
+
+</select>
+
+#end
+
+## 分页框
+#macro (pagingBar $paginator $formName)
+<table>
+   <tr>
+     <td align="right">
+     	##if($paginator)
+			#if($paginator.items && $paginator.items > 0)
+				共$paginator.items条记录，当前$paginator.beginIndex
+				-
+				$paginator.endIndex  
+				跳转<input type="text" id="gotoPage" value="" style="width:30px">页 <input type="button" name="goto" value="go" onclick=" return gotoPages();">  
+				第$paginator.page页/共$paginator.pages页 
+				<a href="javascript:gotoPage(1,'$!formName');">第一页</a>
+				#if($paginator.page>1)
+					<a href="javascript:gotoPage($paginator.previousPage,'$!formName');">前一页</a>
+				#end
+
+				#set ($temp=$paginator.page/5)
+				#if($paginator.page%5==0)
+					#set ($n= $temp - 1)
+				#else
+					#set ($n = $temp)
+				#end
+
+				#set ($leftPreviousePage=$n*5)
+				#set ($leftPage=$leftPreviousePage+1) 	
+				#if($paginator.page>5)
+					<a href="javascript:gotoPage($leftPreviousePage,'$!formName');">...</a>
+				#end
+
+				#set($curRightPage=$n*5+5)
+				#if($paginator.pages>$curRightPage)
+					#set ($rightPage=$curRightPage)
+				#else
+					#set ($rightPage=$paginator.pages)
+				#end
+
+				#foreach( $velocityCount in [$leftPage..$rightPage] )
+					#if($velocityCount!=$paginator.page)
+						<a href="javascript:gotoPage($velocityCount,'$!formName');">$velocityCount</a>
+							#else
+						<b>$velocityCount</b>	
+					#end
+				#end
+
+				#if($paginator.pages>$rightPage)
+					#set ($rightNextPage=$rightPage+1)
+					<a href="javascript:gotoPage($rightNextPage,'$!formName');">...</a>
+				#end
+				#if($paginator.page<$paginator.pages)
+					<a href="javascript:gotoPage($paginator.nextPage,'$!formName');">后一页</a>
+				#end 
+				<a href="javascript:gotoPage($paginator.pages,'$!formName');">最末页</a> 
+			#else
+                <div style="text-align:left;margin-left:30px">没有相关记录！</div>
+			#end
+	  </td>
+   </tr>
+ </table>
+<script type="text/javascript">
+function gotoPage(pageNum,formName){
+	formName = formName || 'mainForm';
+	var frm = document.forms[formName+''];
+	frm.currentPage.value = pageNum;
+	frm.submit();
+}
+
+function gotoPages(){
+		var frm = document.forms["$!{formName}"];
+	     var pages = document.getElementById("gotoPage").value;
+		 if(isNaN(pages) || pages<=0 || pages==""){
+		    alert("请输入大于0的数字!");
+			document.getElementById("gotoPage").value = "";
+			return false;
+		 }
+		 if(pages > $paginator.pages){
+		 	pages = $paginator.pages;
+		 }
+		 frm.currentPage.value = pages;
+		 frm.submit();
+}
+</script>
+#end
+		
+## 运行包详细页面	
+#macro(runnablePkgDetailLink $packageId $target)
+	#if($!packageId)
+		<a target="$!target" href="/pubmng/build.htm?method=queryRunnablePackageDetail&packageId=$!packageId">$!packageId</a>
+	#else
+		无
+	#end
+#end

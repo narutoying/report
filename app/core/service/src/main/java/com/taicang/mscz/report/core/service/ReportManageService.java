@@ -34,7 +34,7 @@ public interface ReportManageService {
 	 * @param conditionsWithValues 维度列与值
 	 * @param unitDatas 单元数据
 	 */
-	void receiveReport(Report report,
+	int receiveReport(Report report,
 			List<ReportDimension> conditionsWithValues,
 			List<Map<String/*维度名*/, String/*真实值*/>> unitDatas);
 

@@ -33,13 +33,14 @@ public class ReportManageServiceImpl implements ReportManageService {
 	private UnitRepository unitRepository;
 
 	@Override
-	public void receiveReport(Report report,
+	public int receiveReport(Report report,
 			List<ReportDimension> conditionsWithValues,
 			List<Map<String, String>> unitDatas) {
 		// 1
 		check(report, conditionsWithValues, unitDatas);
 		// 2
 		init(report, conditionsWithValues, unitDatas);
+		return report.getId();
 	}
 
 	private void init(Report report,
@@ -53,6 +54,7 @@ public class ReportManageServiceImpl implements ReportManageService {
 		ReportFieldMapping fieldMapping = reportFieldMappingRepository
 				.getByReportId(reportId);
 		unitRepository.createUnits(reportId, unitDatas, fieldMapping);
+		report.setId(reportId);
 	}
 
 	private List<String> buildBizNames(

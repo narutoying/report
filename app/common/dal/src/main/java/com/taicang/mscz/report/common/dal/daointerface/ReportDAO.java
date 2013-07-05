@@ -5,8 +5,10 @@
 package com.taicang.mscz.report.common.dal.daointerface;
 
 // auto generated imports
-import com.taicang.mscz.report.common.dal.dataobject.ReportDO;
 import org.springframework.dao.DataAccessException;
+
+import com.taicang.mscz.report.common.dal.dataobject.ReportDO;
+import com.taicang.mscz.report.dal.util.PageList;
 
 /**
  * A dao interface provides methods to access database table <tt>report</tt>.
@@ -71,5 +73,24 @@ public interface ReportDAO {
 	 *	@throws DataAccessException
 	 */	 
     public int insert(ReportDO report) throws DataAccessException;
+
+	/**
+	 *  Query DB table <tt>report</tt> for records.
+	 *
+   	 *  <p>
+   	 *  Description for this operation is<br>
+   	 *  <tt></tt>
+	 *  <p>
+	 *  The sql statement for this operation is <br>
+	 *  <tt>select * from report</tt>
+	 *
+	 *	@param submitter
+	 *	@param name
+	 *	@param pageSize
+	 *	@param pageNum
+	 *	@return PageList
+	 *	@throws DataAccessException
+	 */	 
+    public PageList getByCondition(String submitter, String name, int pageSize, int pageNum) throws DataAccessException;
 
 }
